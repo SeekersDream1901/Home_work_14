@@ -1,7 +1,7 @@
 import sqlite3
 
 
-def search_by_title(title):
+def get_movie_or_TV_show_by_title(title):
     """
     The function searches for a movie or TV show in the database by its title.
     :param title: Users query.
