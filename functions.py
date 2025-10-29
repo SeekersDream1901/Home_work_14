@@ -98,3 +98,20 @@ def get_10_movies_or_TV_series_released_recently_by_listed_in(listed_in):
         movies_or_tv_shows_json = json.dumps(movies_or_tv_shows_list, ensure_ascii=False, indent=4)
 
     return movies_or_tv_shows_json
+
+
+def get_names_of_actors_playing_in_more_two_films_with_the_actors_looking_for(name_of_the_first_actor,
+                                                                              name_of_the_second_actor):
+    """
+    A function that takes the names of two actors as an argument, stores all actors from the cast column, and returns
+    a list of those who have played with them in pairs more than 2 times.
+    """
+    with sqlite3.connect('netflix.db') as connection:
+        cursor = connection.cursor()
+        cursor.execute(
+            f"""SELECT COUNT(`cast`), `cast`
+            FROM netflix
+            WHERE `cast` LIKE '%{name_of_the_first_actor}%' AND `cast` LIKE '%{name_of_the_second_actor}%'
+            ORDER BY `cast`
+            """)
+        return cursor.fetchall()
