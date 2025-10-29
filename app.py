@@ -7,7 +7,7 @@
 from flask import Flask
 
 from functions import get_movie_or_TV_series_by_title, get_movie_or_TV_series_by_year_range, \
-    get_filter_movies_or_tv_series_by_rating
+    get_filter_movies_or_tv_series_by_rating, get_10_movies_or_TV_series_released_recently_by_listed_in
 
 app = Flask(__name__)
 
@@ -40,6 +40,11 @@ def movie_or_TV_series_page_for_family(required_rating):
         rating_r = get_filter_movies_or_tv_series_by_rating('R')
         rating_nc_17 = get_filter_movies_or_tv_series_by_rating('NC_17')
         return rating_r + rating_nc_17
+
+
+@app.route('/genre/<listed_in>')
+def movies_or_TV_series_released_recently_by_listed_in(listed_in):
+    return get_10_movies_or_TV_series_released_recently_by_listed_in(listed_in)
 
 
 if __name__ == '__main__':
