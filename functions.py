@@ -27,7 +27,7 @@ def get_movie_or_TV_series_by_year_range(start_year, end_year):
     """A function that searches for a movie or TV series within a specified time period by year of release.
     :param start_year:The year of manufacture from which to search.
     :param end_year: Year of manufacture up to which to search.
-    :return:
+    :return: List of dictionaries of films and/or TV series released in the specified years of release.
     """
     with sqlite3.connect('netflix.db') as connection:
         cursor = connection.cursor()
@@ -43,6 +43,29 @@ def get_movie_or_TV_series_by_year_range(start_year, end_year):
 
         for movies_or_TV_show in movies_or_tv_shows_search_result:
             keys = ['title', 'release_year']
+            movies_or_tv_shows_list.append(dict(zip(keys, movies_or_TV_show)))
+
+        return movies_or_tv_shows_list
+
+
+def get_filter_movies_or_tv_series_by_rating(rating):
+    """
+    The function implements filtering of films and TV series by their rating.
+    :param rating: Requested rating.
+    :return: List of dictionaries of films and/or TV series by the desired rating.
+    """
+    with sqlite3.connect('netflix.db') as connection:
+        cursor = connection.cursor()
+        query = f"""
+            SELECT rating
+            FROM netflix
+            WHERE rating LIKE '{rating}'
+        """
+        cursor.execute(query)
+        movies_or_tv_shows_search_result = cursor.fetchall()
+        movies_or_tv_shows_list = []
+        for movies_or_TV_show in movies_or_tv_shows_search_result:
+            keys = ['title', 'rating', 'description']
             movies_or_tv_shows_list.append(dict(zip(keys, movies_or_TV_show)))
 
         return movies_or_tv_shows_list
