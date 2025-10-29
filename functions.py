@@ -1,5 +1,7 @@
 import sqlite3
 
+import json
+
 
 def get_movie_or_TV_series_by_title(title):
     """
@@ -69,3 +71,30 @@ def get_filter_movies_or_tv_series_by_rating(rating):
             movies_or_tv_shows_list.append(dict(zip(keys, movies_or_TV_show)))
 
         return movies_or_tv_shows_list
+
+
+def get_10_movies_or_TV_series_released_recently_by_listed_in(listed_in):
+    """
+    A function for displaying the 10 most recently released movies and/or TV series of a specific genre in JSON format.
+    :param listed_in: The desired genre.
+    :return: The 10 most recently released movies and/or TV series of a certain genre in JSON format.
+    """
+    with sqlite3.connect('netflix.db') as connection:
+        cursor = connection.cursor()
+        query = f"""
+        SELECT title, description
+        FROM netflix
+        WHERE listed_in LIKE '%{listed_in}%'
+        ORDER BY release_year DESC
+        LIMIT 10
+        """
+        cursor.execute(query)
+        movies_or_tv_shows_search_result = cursor.fetchall()
+        movies_or_tv_shows_list = []
+        for movies_or_TV_show in movies_or_tv_shows_search_result:
+            keys = ['title', 'description']
+            movies_or_tv_shows_list.append(dict(zip(keys, movies_or_TV_show)))
+
+        movies_or_tv_shows_json = json.dumps(movies_or_tv_shows_list, ensure_ascii=False, indent=4)
+
+    return movies_or_tv_shows_json
